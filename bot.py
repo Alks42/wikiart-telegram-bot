@@ -12,10 +12,10 @@ from random import choice, sample
 from telebot import TeleBot, types
 from urllib import parse
 
-API_ACCESS_KEY = '9f3b27777f0e4891'
-API_SECRET_KEY = 'bea32b86a855f875'
-CHAT_ID = -1001634534473
-TOKEN = '5674725616:AAE1qhifFTyHEVVLunmFXcLOpct6jkbPBUw'
+API_ACCESS_KEY = 'wikiart_api_access_key'
+API_SECRET_KEY = 'wikiart_api_secret_key'
+CHAT_ID = 123456789  # telegram chat_id, int
+TOKEN = 'your_bot_token'
 BASE_URL = 'https://www.wikiart.org/en/'
 
 
@@ -42,6 +42,7 @@ def get_artist():
 def get_details(artist: dict):
     key = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}').json()[
         'SessionKey']
+
     # --------------------- get artist details ---------------------
     url = f'{BASE_URL}{list(artist)[0]}'
     info = requests.get(f'{url}?json=2&authSessionKey={key}').json()
