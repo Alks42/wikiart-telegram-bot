@@ -8,7 +8,7 @@ Max sessions per hour: 10
 
 import requests
 import json
-import supabase
+from supabase import create_client
 from random import choice, sample
 from telebot import TeleBot, types
 from urllib import parse
@@ -28,7 +28,7 @@ def get_artist():
     with open('impressionists.json', 'r') as f:
         all_artists = json.load(f).items()
 
-    table = supabase.create_client(SUPBASE_URL, SUPBASE_KEY)
+    table = create_client(SUPBASE_URL, SUPBASE_KEY)
     data = table.table('dump').select('*').execute()
 
     exclude = {}
