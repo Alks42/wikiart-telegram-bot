@@ -8,7 +8,7 @@ Max sessions per hour: 10
 
 import requests
 import json
-from supabase import create_client
+from supabase_py import create_client
 from random import choice, sample
 from telebot import TeleBot, types
 from urllib import parse
