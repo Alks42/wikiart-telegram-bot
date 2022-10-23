@@ -79,8 +79,6 @@ def send_message(*args):
 
 def main():
     artist, artist_id = get_artist()
-    # params = get_details(artist, artist_id)
-    # send_message(*params)
-    # return "status-code: 200"
-
-main()
+    params = get_details(artist, artist_id)
+    send_message(*params)
+    return "status-code: 200"
