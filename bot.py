@@ -29,22 +29,22 @@ def get_artist():
             d.seek(0)
             exclude = json.load(d)
 
-    artist = choice([{name: artist_id} for name, artist_id in all_artists if artist_id not in exclude.values()])
-    exclude = exclude | artist
+    artist, artist_id = choice([[name, artist_id] for name, artist_id in all_artists if artist_id not in exclude.values()])
+    exclude = exclude | {artist: artist_id}
 
     with open('dump.json', 'w') as d:
         if len(exclude) != len(all_artists):
             d.write(json.dumps(exclude))
 
-    return artist
+    return artist, artist_id
 
 
-def get_details(artist: dict):
+def get_details(artist, artist_id):
     key = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}').json()[
         'SessionKey']
 
     # --------------------- get artist details ---------------------
-    url = f'{BASE_URL}{list(artist)[0]}'
+    url = f'{BASE_URL}{artist}'
     info = requests.get(f'{url}?json=2&authSessionKey={key}').json()
     name, portrait, title, bio = info['artistName'], info['image'], info['wikipediaUrl'], ''
 
@@ -61,7 +61,7 @@ def get_details(artist: dict):
             bio = bio[0]['extract'].split('\n')[0]
 
     # --------------------- get artist paintings -------------------
-    req = requests.get(f'{BASE_URL}Api/2/PaintingsByArtist?id={list(artist.values())[0]}&authSessionKey={key}').json()
+    req = requests.get(f'{BASE_URL}Api/2/PaintingsByArtist?id={artist_id}&authSessionKey={key}').json()
     paintings = sample([d['image'] for d in req['data']], k=7)
     return name, portrait, bio, url, paintings
 
@@ -75,8 +75,8 @@ def send_message(*args):
 
 
 def main():
-    artist = get_artist()
-    params = get_details(artist)
+    artist, artist_id = get_artist()
+    params = get_details(artist, artist_id)
     send_message(*params)
 
 
