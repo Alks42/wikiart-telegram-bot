@@ -8,7 +8,6 @@ Max sessions per hour: 10
 
 import requests
 import json
-from supabase_py import create_client
 from random import choice, sample
 from telebot import TeleBot, types
 from urllib import parse
@@ -28,20 +27,17 @@ def get_artist():
     with open('impressionists.json', 'r') as f:
         all_artists = json.load(f).items()
 
-    table = create_client(SUPBASE_URL, SUPBASE_KEY)
-    data = table.table('dump').select('*').execute()
-    print(data)
-
+    url = f'{SUPBASE_URL}/rest/v1/dump?apikey={SUPBASE_KEY}'
+    data = requests.get(url).json()
     exclude = {}
-    if data.data:
-        for d in data.data:
-            exclude = exclude | {d['artist']: d['artist_id']}
+    if data:
+        exclude = [exclude | {d['artist']: d['artist_id']} for d in data]
 
     artist, artist_id = choice([[name, artist_id] for name, artist_id in all_artists if artist_id not in exclude.values()])
-    if len(data.data) == len(all_artists) - 1:
-        table.table('dump').delete().neq('id', -1).execute()
+    if len(data) == len(all_artists) - 1:
+        requests.delete(url, params={'id': 'neq.-1'})
     else:
-        table.table('dump').insert({'artist': artist, 'artist_id': artist_id}).execute()
+        requests.post(url, data={'artist': artist, 'artist_id': artist_id})
 
     return artist, artist_id
 
@@ -83,6 +79,8 @@ def send_message(*args):
 
 def main():
     artist, artist_id = get_artist()
-    params = get_details(artist, artist_id)
-    send_message(*params)
-    return "status-code: 200"
+    # params = get_details(artist, artist_id)
+    # send_message(*params)
+    # return "status-code: 200"
+
+main()
