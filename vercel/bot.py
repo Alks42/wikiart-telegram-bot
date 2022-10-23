@@ -29,9 +29,7 @@ def get_artist():
 
     url = f'{SUPBASE_URL}/rest/v1/dump?apikey={SUPBASE_KEY}'
     data = requests.get(url).json()
-    exclude = {}
-    if data:
-        exclude = {exclude | {d['artist']: d['artist_id']} for d in data}
+    exclude = {d['artist']: d['artist_id'] for d in data} if data else {}
 
     artist, artist_id = choice([[name, artist_id] for name, artist_id in all_artists if artist_id not in exclude.values()])
     if len(data) == len(all_artists) - 1:
