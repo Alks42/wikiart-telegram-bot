@@ -2,3 +2,7 @@ Flask==2.2.2
 pyTelegramBotAPI==4.7.1
 requests==2.25.1
 supabase==0.7.1
+certifi==2022.9.24
+charset-normalizer==2.1.1
+idna==3.4
+urllib3==1.26.12
