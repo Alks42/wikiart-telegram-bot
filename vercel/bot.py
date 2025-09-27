@@ -20,6 +20,7 @@ SUPBASE_KEY = environ['SUPBASE_KEY']
 CHAT_ID = environ['CHAT_ID']  # telegram chat_id, int
 TOKEN = environ['TOKEN']
 BASE_URL = 'https://www.wikiart.org/en/'
+USER_AGENT = environ['USER_AGENT']
 
 
 def get_artist():
@@ -51,13 +52,16 @@ def get_details(artist, artist_id):
 
     if title and 'en.wikipedia.org' in title:
         link = parse.unquote(title).split('#')[0].replace('wiki/', 'w/api.php?titles=')
+        headers = {
+            'User-Agent': USER_AGENT
+        }
         params = {'format': 'json',
                   'action': 'query',
                   'redirects': True,
                   'prop': 'extracts',
                   'exintro': '',
                   'explaintext': ''}
-        bio = list(requests.get(link, params).json()['query']['pages'].values())
+        bio = list(requests.get(link, params, headers=headers).json()['query']['pages'].values())
         if 'missing' not in bio:
             bio = bio[0]['extract'].split('\n')[0]
 
