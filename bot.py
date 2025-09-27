@@ -17,7 +17,7 @@ API_SECRET_KEY = 'wikiart_api_secret_key'
 CHAT_ID = 123456789  # telegram chat_id, int
 TOKEN = 'your_bot_token'
 BASE_URL = 'https://www.wikiart.org/en/'
-
+USER_AGENT = 'your contacts for wikipedia'
 
 def get_artist():
     with open('impressionists.json', 'r') as f:
@@ -50,13 +50,16 @@ def get_details(artist, artist_id):
 
     if title and 'en.wikipedia.org' in title:
         link = parse.unquote(title).split('#')[0].replace('wiki/', 'w/api.php?titles=')
+        headers = {
+            'User-Agent': USER_AGENT
+        }
         params = {'format': 'json',
                   'action': 'query',
                   'redirects': True,
                   'prop': 'extracts',
                   'exintro': '',
                   'explaintext': ''}
-        bio = list(requests.get(link, params).json()['query']['pages'].values())
+        bio = list(requests.get(link, params, headers=headers).json()['query']['pages'].values())
         if 'missing' not in bio:
             bio = bio[0]['extract'].split('\n')[0]
 
