@@ -52,7 +52,7 @@ def get_details(artist, artist_id):
 
     # --------------------- get artist details ---------------------
     url = f'{BASE_URL}{artist}'
-    info = requests.get(f'{url}?json=2&authSessionKey={key}').json()
+    info = scraper.get(f'{url}?json=2&authSessionKey={key}', headers=headers).json()
     name, portrait, title, bio = info['artistName'], info['image'], info['wikipediaUrl'], ''
 
     if title and 'en.wikipedia.org' in title:
@@ -68,7 +68,7 @@ def get_details(artist, artist_id):
             bio = bio[0]['extract'].split('\n')[0]
 
     # --------------------- get artist paintings -------------------
-    req = requests.get(f'{BASE_URL}Api/2/PaintingsByArtist?id={artist_id}&authSessionKey={key}').json()
+    req = scraper.get(f'{BASE_URL}Api/2/PaintingsByArtist?id={artist_id}&authSessionKey={key}').json()
     paintings = sample([d['image'] for d in req['data']], k=7)
     return name, portrait, bio, url, paintings
 
