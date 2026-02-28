@@ -7,6 +7,7 @@ Max sessions per hour: 10
 """
 
 import requests
+import cloudscraper
 import json
 from random import choice, sample
 from telebot import TeleBot, types
@@ -45,7 +46,8 @@ def get_details(artist, artist_id):
     headers = {
         'User-Agent': USER_AGENT
     }
-    rq = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}', headers=headers)
+    scraper = cloudscraper.create_scraper()
+    rq = scraper.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}', headers=headers)
     key = rq.json()['SessionKey']
 
     # --------------------- get artist details ---------------------
