@@ -42,8 +42,9 @@ def get_artist():
 
 
 def get_details(artist, artist_id):
-    key = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}').json()[
-        'SessionKey']
+    req = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}').json()
+    print(req)
+    key = req['SessionKey']
 
     # --------------------- get artist details ---------------------
     url = f'{BASE_URL}{artist}'
