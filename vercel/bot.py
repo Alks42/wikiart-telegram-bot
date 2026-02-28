@@ -42,10 +42,11 @@ def get_artist():
 
 
 def get_details(artist, artist_id):
-    req = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}').text
-    print(req, flush=True)
-    return req
-    key = req.json()['SessionKey']
+    headers = {
+        'User-Agent': USER_AGENT
+    }
+    rq = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}', headers=headers)
+    key = rq.json()['SessionKey']
 
     # --------------------- get artist details ---------------------
     url = f'{BASE_URL}{artist}'
@@ -54,9 +55,6 @@ def get_details(artist, artist_id):
 
     if title and 'en.wikipedia.org' in title:
         link = parse.unquote(title).split('#')[0].replace('wiki/', 'w/api.php?titles=')
-        headers = {
-            'User-Agent': USER_AGENT
-        }
         params = {'format': 'json',
                   'action': 'query',
                   'redirects': True,
@@ -84,6 +82,5 @@ def send_message(*args):
 def main():
     artist, artist_id = get_artist()
     params = get_details(artist, artist_id)
-    return params
     send_message(*params)
     return "status-code: 200"
