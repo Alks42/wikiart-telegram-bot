@@ -42,7 +42,7 @@ def get_artist():
 
 
 def get_details(artist, artist_id):
-    req = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}')
+    req = requests.get(f'{BASE_URL}Api/2/login?accessCode={API_ACCESS_KEY}&secretCode={API_SECRET_KEY}').text
     print(req, flush=True)
     return req
     key = req.json()['SessionKey']
@@ -83,7 +83,7 @@ def send_message(*args):
 
 def main():
     artist, artist_id = get_artist()
-    return get_details(artist, artist_id)
     params = get_details(artist, artist_id)
+    return params
     send_message(*params)
     return "status-code: 200"
